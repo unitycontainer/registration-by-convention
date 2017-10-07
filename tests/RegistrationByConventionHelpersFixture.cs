@@ -84,10 +84,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsInstanceOfType(WithLifetime.PerResolve(typeof(MockLogger)), typeof(PerResolveLifetimeManager));
             Assert.IsInstanceOfType(WithLifetime.Transient(typeof(MockLogger)), typeof(TransientLifetimeManager));
             Assert.IsInstanceOfType(WithLifetime.Custom<CustomLifetimeManager>(typeof(MockLogger)), typeof(CustomLifetimeManager));
-
-#if !NETFX_CORE
             Assert.IsInstanceOfType(WithLifetime.PerThread(typeof(MockLogger)), typeof(PerThreadLifetimeManager));
-#endif
         }
 
         public class CustomLifetimeManager : LifetimeManager

@@ -4,16 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Practices.Unity.TestSupport;
-#if NETFX_CORE
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#elif __IOS__
-using NUnit.Framework;
-using TestClassAttribute = NUnit.Framework.TestFixtureAttribute;
-using TestMethodAttribute = NUnit.Framework.TestAttribute;
-using TestInitializeAttribute = NUnit.Framework.TestFixtureSetUpAttribute;
-#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -144,8 +135,6 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
 
-#if !NETFX_CORE
-
         [TestMethod]
         public void RegistersAllTypesWithHelperMethods()
         {
@@ -168,7 +157,6 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.AreEqual("MockLogger", implementationRegistration.Name);
             Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
-#endif
 
         public void CanResolveTypeRegisteredWithAllInterfaces()
         {
