@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>Unity.RegistrationByConvention</PackageId>
+    <Description>Unity Registration By Convention</Description>
+    <Version>1.0.0-beta</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Copyright>Copyright © Microsoft.Practices.Unity 2017</Copyright>
+    <PackageProjectUrl>https://github.com/unitycontainer/unity</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/unitycontainer/unity</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/unitycontainer/unity/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/12849707</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>This package is distributed as .NET Standard 1.0 package.</PackageReleaseNotes>
+    <Authors>Microsoft.Practices.Unity</Authors>
+    <Company>Microsoft.Practices.Unity</Company>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="Exists('..\..\package.snk')">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\package.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Unity\src\Unity.Container.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
