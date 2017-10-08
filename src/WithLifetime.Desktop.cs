@@ -2,6 +2,7 @@
 
 using System;
 using Unity;
+using Unity.Lifetime;
 
 namespace Microsoft.Practices.Unity
 {

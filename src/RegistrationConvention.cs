@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using Unity;
+using Unity.Lifetime;
+using Unity.Registration;
 
 namespace Microsoft.Practices.Unity
 {
