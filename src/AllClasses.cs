@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Practices.Unity.Utility;
 using Unity.RegistrationByConvention.Properties;
 
 namespace Microsoft.Practices.Unity
@@ -66,9 +65,7 @@ namespace Microsoft.Practices.Unity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Simplify API")]
         public static IEnumerable<Type> FromAssemblies(IEnumerable<Assembly> assemblies, bool skipOnError = true)
         {
-            Guard.ArgumentNotNull(assemblies, "assemblies");
-
-            return FromCheckedAssemblies(CheckAssemblies(assemblies), skipOnError);
+            return FromCheckedAssemblies(CheckAssemblies(assemblies ?? throw new ArgumentNullException(nameof(assemblies))), skipOnError);
         }
 
         private static IEnumerable<Type> FromCheckedAssemblies(IEnumerable<Assembly> assemblies, bool skipOnError)

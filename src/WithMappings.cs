@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Practices.Unity.Utility;
 
 namespace Microsoft.Practices.Unity
 {
@@ -36,9 +35,7 @@ namespace Microsoft.Practices.Unity
           Justification = "Validation done by Guard class")]
         public static IEnumerable<Type> FromMatchingInterface(Type implementationType)
         {
-            Guard.ArgumentNotNull(implementationType, "implementationType");
-
-            var matchingInterfaceName = "I" + implementationType.Name;
+            var matchingInterfaceName = "I" + (implementationType ?? throw new ArgumentNullException(nameof(implementationType))).Name;
 
             var @interface = GetImplementedInterfacesToMap(implementationType).FirstOrDefault(i => string.Equals(i.Name, matchingInterfaceName, StringComparison.Ordinal));
 
@@ -59,9 +56,7 @@ namespace Microsoft.Practices.Unity
         /// <returns>An enumeration with all the interfaces implemented by the implementation type except <see cref="IDisposable"/>.</returns>
         public static IEnumerable<Type> FromAllInterfaces(Type implementationType)
         {
-            Guard.ArgumentNotNull(implementationType, "implementationType");
-
-            return GetImplementedInterfacesToMap(implementationType).Where(i => i != typeof(IDisposable));
+            return GetImplementedInterfacesToMap(implementationType ?? throw new ArgumentNullException(nameof(implementationType))).Where(i => i != typeof(IDisposable));
         }
 
         /// <summary>
@@ -71,9 +66,7 @@ namespace Microsoft.Practices.Unity
         /// <returns>An enumeration with all the interfaces implemented by the implementation type that belong to the same assembly.</returns>
         public static IEnumerable<Type> FromAllInterfacesInSameAssembly(Type implementationType)
         {
-            Guard.ArgumentNotNull(implementationType, "implementationType");
-
-            var implementationTypeAssembly = implementationType.GetTypeInfo().Assembly;
+            var implementationTypeAssembly = (implementationType ?? throw new ArgumentNullException(nameof(implementationType))).GetTypeInfo().Assembly;
             return GetImplementedInterfacesToMap(implementationType).Where(i => i.GetTypeInfo().Assembly == implementationTypeAssembly);
         }
 

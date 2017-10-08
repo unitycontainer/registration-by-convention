@@ -3,7 +3,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Microsoft.Practices.Unity.Utility;
 using Unity.RegistrationByConvention.Properties;
 
 namespace Microsoft.Practices.Unity
@@ -35,14 +34,10 @@ namespace Microsoft.Practices.Unity
         public DuplicateTypeMappingException(string name, Type mappedFromType, Type currentMappedToType, Type newMappedToType)
             : base(CreateMessage(name, mappedFromType, currentMappedToType, newMappedToType))
         {
-            Guard.ArgumentNotNull(mappedFromType, "mappedFromType");
-            Guard.ArgumentNotNull(currentMappedToType, "currentMappedToType");
-            Guard.ArgumentNotNull(newMappedToType, "newMappedToType");
-
             this.name = name;
-            this.mappedFromType = mappedFromType.AssemblyQualifiedName;
-            this.currentMappedToType = currentMappedToType.AssemblyQualifiedName;
-            this.newMappedToType = newMappedToType.AssemblyQualifiedName;
+            this.mappedFromType = (mappedFromType ?? throw new ArgumentNullException(nameof(mappedFromType))).AssemblyQualifiedName;
+            this.currentMappedToType = (currentMappedToType ?? throw new ArgumentNullException(nameof(currentMappedToType))).AssemblyQualifiedName;
+            this.newMappedToType = (newMappedToType ?? throw new ArgumentNullException(nameof(newMappedToType))).AssemblyQualifiedName;
 
             this.RegisterSerializationHandler();
         }

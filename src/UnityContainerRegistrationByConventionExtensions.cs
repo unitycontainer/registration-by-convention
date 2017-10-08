@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity.Utility;
 using Unity;
 using Unity.Lifetime;
 using Unity.Registration;
@@ -34,7 +32,7 @@ namespace Microsoft.Practices.Unity
         /// </returns>
         /// <exception cref="ArgumentException">A new registration would overwrite an existing mapping and <paramref name="overwriteExistingMappings"/> is <see langword="false"/>.</exception>
         public static IUnityContainer RegisterTypes(
-            this IUnityContainer container,
+            this IUnityContainer unityContainer,
             IEnumerable<Type> types,
             Func<Type, IEnumerable<Type>> getFromTypes = null,
             Func<Type, string> getName = null,
@@ -42,8 +40,7 @@ namespace Microsoft.Practices.Unity
             Func<Type, IEnumerable<InjectionMember>> getInjectionMembers = null,
             bool overwriteExistingMappings = false)
         {
-            Guard.ArgumentNotNull(container, "container");
-            Guard.ArgumentNotNull(types, "types");
+            var container = unityContainer ?? throw new ArgumentNullException(nameof(unityContainer));
 
             if (getFromTypes == null)
             {
@@ -72,7 +69,7 @@ namespace Microsoft.Practices.Unity
                     ? container.Registrations.Where(r => r.RegisteredType != r.MappedToType).ToDictionary(r => new NamedTypeBuildKey(r.RegisteredType, r.Name), r => r.MappedToType)
                     : null;
 
-            foreach (var type in types)
+            foreach (var type in types ?? throw new ArgumentNullException(nameof(types)))
             {
                 var fromTypes = getFromTypes(type);
                 var name = getName(type);
@@ -83,7 +80,7 @@ namespace Microsoft.Practices.Unity
 
                 if (lifetimeManager != null || injectionMembers.Length > 0)
                 {
-                    container.RegisterType(type, name, lifetimeManager, injectionMembers);
+                    container.RegisterType(null, type, name, lifetimeManager, injectionMembers);
                 }
             }
 
@@ -101,9 +98,10 @@ namespace Microsoft.Practices.Unity
         /// </returns>
         public static IUnityContainer RegisterTypes(this IUnityContainer container, RegistrationConvention convention, bool overwriteExistingMappings = false)
         {
-            Guard.ArgumentNotNull(convention, "convention");
-
-            container.RegisterTypes(convention.GetTypes(), convention.GetFromTypes(), convention.GetName(), convention.GetLifetimeManager(), convention.GetInjectionMembers(), overwriteExistingMappings);
+            (container ?? throw new ArgumentNullException(nameof(container)))
+                .RegisterTypes((convention ?? throw new ArgumentNullException(nameof(convention))).GetTypes(), 
+                               convention.GetFromTypes(), convention.GetName(), convention.GetLifetimeManager(),
+                               convention.GetInjectionMembers(), overwriteExistingMappings);
 
             return container;
         }
@@ -124,7 +122,7 @@ namespace Microsoft.Practices.Unity
                     mappings[key] = type;
                 }
 
-                container.RegisterType(fromType, type, name);
+                container.RegisterType(fromType, type, name, null);
             }
         }
     }

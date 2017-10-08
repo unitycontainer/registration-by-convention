@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
-using Microsoft.Practices.Unity.Utility;
 
 namespace Microsoft.Practices.Unity
 {
@@ -15,15 +14,9 @@ namespace Microsoft.Practices.Unity
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The type name.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Validated with Guard class")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "Need to match signature Func<Type, string>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods",
-          Justification = "Validation done by Guard class")]
         public static string TypeName(Type type)
         {
-            Guard.ArgumentNotNull(type, "type");
-
-            return type.Name;
+            return (type ?? throw new ArgumentNullException(nameof(type))).Name;
         }
 
         /// <summary>
@@ -31,7 +24,6 @@ namespace Microsoft.Practices.Unity
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns><see langword="null"/></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "type", Justification = "Need to match signature Func<Type, string>")]
         public static string Default(Type type)
         {
             return null;
