@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Practices.Unity.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Unity;
 
 namespace Microsoft.Practices.Unity.Tests
 {
