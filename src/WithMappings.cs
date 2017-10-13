@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Provides helper methods to map types to the types interfaces to which register them.
@@ -19,7 +19,6 @@ namespace Microsoft.Practices.Unity
         /// </summary>
         /// <param name="implementationType">The type to register.</param>
         /// <returns>An empty enumeration.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "implementationType", Justification = "Need to match signature Func<Type, IEnumerable<Type>>")]
         public static IEnumerable<Type> None(Type implementationType)
         {
             return EmptyTypes;
@@ -31,22 +30,14 @@ namespace Microsoft.Practices.Unity
         /// <param name="implementationType">The type to register.</param>
         /// <returns>An enumeration with the first interface matching the name of <paramref name="implementationType"/> (for example, if type is MyType, a matching interface is IMyType),
         /// or an empty enumeration if no such interface is found.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods",
-          Justification = "Validation done by Guard class")]
         public static IEnumerable<Type> FromMatchingInterface(Type implementationType)
         {
             var matchingInterfaceName = "I" + (implementationType ?? throw new ArgumentNullException(nameof(implementationType))).Name;
 
-            var @interface = GetImplementedInterfacesToMap(implementationType).FirstOrDefault(i => string.Equals(i.Name, matchingInterfaceName, StringComparison.Ordinal));
+            var @interface = GetImplementedInterfacesToMap(implementationType)
+                .FirstOrDefault(i => string.Equals(i.Name, matchingInterfaceName, StringComparison.Ordinal));
 
-            if (@interface != null)
-            {
-                return new[] { @interface };
-            }
-            else
-            {
-                return EmptyTypes;
-            }
+            return @interface != null ? new[] { @interface } : EmptyTypes;
         }
 
         /// <summary>
@@ -78,14 +69,10 @@ namespace Microsoft.Practices.Unity
             {
                 return typeInfo.ImplementedInterfaces;
             }
-            else if (!typeInfo.IsGenericTypeDefinition)
-            {
-                return typeInfo.ImplementedInterfaces;
-            }
-            else
-            {
-                return FilterMatchingGenericInterfaces(typeInfo);
-            }
+
+            return !typeInfo.IsGenericTypeDefinition 
+                ? typeInfo.ImplementedInterfaces 
+                : FilterMatchingGenericInterfaces(typeInfo);
         }
 
         private static IEnumerable<Type> FilterMatchingGenericInterfaces(TypeInfo typeInfo)
@@ -116,15 +103,7 @@ namespace Microsoft.Practices.Unity
                 return false;
             }
 
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                if (parameters[i] != interfaceArguments[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return !parameters.Where((t, i) => t != interfaceArguments[i]).Any();
         }
     }
 }

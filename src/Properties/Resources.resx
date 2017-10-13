@@ -119,6 +119,7 @@
   </resheader>
   <data name="DuplicateTypeMappingException" xml:space="preserve">
     <value>An attempt to override an existing mapping was detected for type {1} with name "{0}", currently mapped to type {2}, to type {3}.  </value>
+    <comment> </comment>
   </data>
   <data name="ExceptionNullAssembly" xml:space="preserve">
     <value>The set of assemblies contains a null element. </value>

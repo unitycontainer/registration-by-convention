@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>Unity.RegistrationByConvention</PackageId>
     <Description>Unity Registration By Convention</Description>
     <Version>1.0.0-beta</Version>
@@ -19,9 +17,21 @@
     <Company>Microsoft.Practices.Unity</Company>
   </PropertyGroup>
   
-  <PropertyGroup Condition="Exists('..\..\package.snk')">
+ 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>Full</DebugType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\package.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>package.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
@@ -30,11 +40,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Abstractions\src\Unity.Abstractions.csproj" />
+    <Reference Include="System.Windows" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Windows" />
+  <ItemGroup Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <Compile Remove="AllClasses.Desktop.cs" />
+    <Compile Remove="Exceptions\DuplicateTypeMappingException.Desktop.cs" />
+    <Compile Remove="WithLifetime.Desktop.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageReference Include="Unity.Abstractions" Version="2.0.0-RC1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ProjectReference Include="..\..\Abstractions\src\Unity.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

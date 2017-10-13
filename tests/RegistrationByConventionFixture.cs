@@ -9,6 +9,7 @@ using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
 using Unity.Registration;
+using Unity.RegistrationByConvention;
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -120,7 +121,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersUsingTheHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
+            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(2, registrations.Length);
@@ -143,7 +144,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersAllTypesWithHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(2, registrations.Length);
@@ -165,7 +166,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveTypeRegisteredWithAllInterfaces()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
+            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled);
 
             var logger1 = container.Resolve<ILogger>();
             var logger2 = container.Resolve<ILogger>();
@@ -177,7 +178,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveGenericTypeMappedWithMatchingInterface()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly), WithMappings.FromMatchingInterface, WithName.Default, WithLifetime.None);
+            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly), WithMappings.FromMatchingInterface, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.None);
 
             var list = container.Resolve<IList<int>>();
 
@@ -201,7 +202,7 @@ namespace Microsoft.Practices.Unity.Tests
             var container = new UnityContainer();
             container.RegisterType<object, string>();
 
-            AssertExtensions.AssertException<DuplicateTypeMappingException>(
+            AssertExtensions.AssertException<global::Unity.RegistrationByConvention.Exceptions.DuplicateTypeMappingException>(
                 () => container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }));
         }
 
@@ -210,7 +211,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
             var container = new UnityContainer();
 
-            AssertExtensions.AssertException<DuplicateTypeMappingException>(
+            AssertExtensions.AssertException<global::Unity.RegistrationByConvention.Exceptions.DuplicateTypeMappingException>(
                 () => container.RegisterTypes(new[] { typeof(string), typeof(int) }, t => new[] { typeof(object) }));
         }
 

@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Unity;
 using Unity.Lifetime;
+using Unity.RegistrationByConvention;
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -79,14 +80,14 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void GetsLifetimeManagers()
         {
-            Assert.IsInstanceOfType(WithLifetime.ContainerControlled(typeof(MockLogger)), typeof(ContainerControlledLifetimeManager));
-            Assert.IsInstanceOfType(WithLifetime.ExternallyControlled(typeof(MockLogger)), typeof(ExternallyControlledLifetimeManager));
-            Assert.IsInstanceOfType(WithLifetime.Hierarchical(typeof(MockLogger)), typeof(HierarchicalLifetimeManager));
-            Assert.IsNull(WithLifetime.None(typeof(MockLogger)));
-            Assert.IsInstanceOfType(WithLifetime.PerResolve(typeof(MockLogger)), typeof(PerResolveLifetimeManager));
-            Assert.IsInstanceOfType(WithLifetime.Transient(typeof(MockLogger)), typeof(TransientLifetimeManager));
-            Assert.IsInstanceOfType(WithLifetime.Custom<CustomLifetimeManager>(typeof(MockLogger)), typeof(CustomLifetimeManager));
-            Assert.IsInstanceOfType(WithLifetime.PerThread(typeof(MockLogger)), typeof(PerThreadLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled(typeof(MockLogger)), typeof(ContainerControlledLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.ExternallyControlled(typeof(MockLogger)), typeof(ExternallyControlledLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.Hierarchical(typeof(MockLogger)), typeof(HierarchicalLifetimeManager));
+            Assert.IsNull(global::Unity.RegistrationByConvention.WithLifetime.None(typeof(MockLogger)));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.PerResolve(typeof(MockLogger)), typeof(PerResolveLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.Transient(typeof(MockLogger)), typeof(TransientLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.Custom<CustomLifetimeManager>(typeof(MockLogger)), typeof(CustomLifetimeManager));
+            Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.PerThread(typeof(MockLogger)), typeof(PerThreadLifetimeManager));
         }
 
         public class CustomLifetimeManager : LifetimeManager

@@ -3,12 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity;
 using Unity.Builder;
 using Unity.Lifetime;
 using Unity.Registration;
+using Unity.RegistrationByConvention.Exceptions;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Provides a set of convenience overloads to the
@@ -21,7 +21,7 @@ namespace Microsoft.Practices.Unity
         /// <summary>
         /// Registers the supplied types by using the specified rules for name, lifetime manager, injection members, and registration types.
         /// </summary>
-        /// <param name="container">The container to configure.</param>
+        /// <param name="unityContainer">The container to configure.</param>
         /// <param name="types">The types to register. The methods in the <see cref="AllClasses" /> class can be used to scan assemblies to get types, and further filtering can be performed using LINQ queries.</param>
         /// <param name="getFromTypes">A function that gets the types that will be requested for each type to configure. It can be a method from the <see cref="WithMappings" /> class or a custom function. Defaults to no registration types, and registers only the supplied types.</param>
         /// <param name="getName">A function that gets the name to use for the registration of each type. It can be a method from the <see cref="WithName" /> or a custom function. Defaults to no name.</param>

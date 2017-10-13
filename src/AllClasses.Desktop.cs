@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     public partial class AllClasses
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Practices.Unity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Simplify API")]
         public static IEnumerable<Type> FromLoadedAssemblies(bool includeSystemAssemblies = false, bool includeUnityAssemblies = false, bool includeDynamicAssemblies = false, bool skipOnError = true)
         {
-            return FromCheckedAssemblies(GetLoadedAssemblies(includeSystemAssemblies, includeUnityAssemblies, includeDynamicAssemblies), skipOnError);
+            return AllClasses.FromCheckedAssemblies(GetLoadedAssemblies(includeSystemAssemblies, includeUnityAssemblies, includeDynamicAssemblies), skipOnError);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Microsoft.Practices.Unity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Simplify API")]
         public static IEnumerable<Type> FromAssembliesInBasePath(bool includeSystemAssemblies = false, bool includeUnityAssemblies = false, bool skipOnError = true)
         {
-            return FromCheckedAssemblies(GetAssembliesInBasePath(includeSystemAssemblies, includeUnityAssemblies, skipOnError), skipOnError);
+            return AllClasses.FromCheckedAssemblies(GetAssembliesInBasePath(includeSystemAssemblies, includeUnityAssemblies, skipOnError), skipOnError);
         }
 
         private static IEnumerable<Assembly> GetAssembliesInBasePath(bool includeSystemAssemblies, bool includeUnityAssemblies, bool skipOnError)
@@ -70,7 +70,7 @@ namespace Microsoft.Practices.Unity
 
             return GetAssemblyNames(basePath, skipOnError)
                     .Select(an => LoadAssembly(Path.GetFileNameWithoutExtension(an), skipOnError))
-                    .Where(a => a != null && (includeSystemAssemblies || !IsSystemAssembly(a)) && (includeUnityAssemblies || !IsUnityAssembly(a)));
+                    .Where(a => a != null && (includeSystemAssemblies || !AllClasses.IsSystemAssembly(a)) && (includeUnityAssemblies || !AllClasses.IsUnityAssembly(a)));
         }
 
         private static IEnumerable<string> GetAssemblyNames(string path, bool skipOnError)
@@ -116,7 +116,7 @@ namespace Microsoft.Practices.Unity
                 return assemblies;
             }
 
-            return assemblies.Where(a => (includeDynamicAssemblies || !a.IsDynamic) && (includeSystemAssemblies || !IsSystemAssembly(a)) && (includeUnityAssemblies || !IsUnityAssembly(a)));
+            return assemblies.Where(a => (includeDynamicAssemblies || !a.IsDynamic) && (includeSystemAssemblies || !AllClasses.IsSystemAssembly(a)) && (includeUnityAssemblies || !AllClasses.IsUnityAssembly(a)));
         }
     }
 }

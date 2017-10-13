@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Provides helper methods to get type names.

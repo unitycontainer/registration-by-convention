@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Unity.RegistrationByConvention.Properties;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Provides helper methods to retrieve classes from assemblies.
@@ -62,7 +62,6 @@ namespace Microsoft.Practices.Unity
         /// If <paramref name="skipOnError"/> is <see langword="true"/>, all exceptions thrown while getting types from the assemblies are ignored, and the types 
         /// that can be retrieved are returned; otherwise, the original exception is thrown.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Simplify API")]
         public static IEnumerable<Type> FromAssemblies(IEnumerable<Assembly> assemblies, bool skipOnError = true)
         {
             return FromCheckedAssemblies(CheckAssemblies(assemblies ?? throw new ArgumentNullException(nameof(assemblies))), skipOnError);
@@ -95,15 +94,13 @@ namespace Microsoft.Practices.Unity
 
         private static IEnumerable<Assembly> CheckAssemblies(IEnumerable<Assembly> assemblies)
         {
-            foreach (var assembly in assemblies)
+            var checkAssemblies = assemblies as Assembly[] ?? assemblies.ToArray();
+            if (checkAssemblies.Any(assembly => assembly == null))
             {
-                if (assembly == null)
-                {
-                    throw new ArgumentException(Resources.ExceptionNullAssembly, "assemblies");
-                }
+                throw new ArgumentException(Resources.ExceptionNullAssembly, nameof(assemblies));
             }
 
-            return assemblies;
+            return checkAssemblies;
         }
 
         private static bool IsSystemAssembly(Assembly a)
@@ -113,35 +110,26 @@ namespace Microsoft.Practices.Unity
                 var productAttribute = a.GetCustomAttribute<AssemblyProductAttribute>();
                 return productAttribute != null && string.Compare(NetFrameworkProductName, productAttribute.Product, StringComparison.Ordinal) == 0;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private static bool IsUnityAssembly(Assembly a)
         {
-            if (UnityProductName != null)
-            {
-                var productAttribute = a.GetCustomAttribute<AssemblyProductAttribute>();
-                return productAttribute != null && string.Compare(UnityProductName, productAttribute.Product, StringComparison.Ordinal) == 0;
-            }
-            else
-            {
-                return false;
-            }
+            if (UnityProductName == null) return false;
+            var productAttribute = a.GetCustomAttribute<AssemblyProductAttribute>();
+            return productAttribute != null && string.Compare(UnityProductName, productAttribute.Product, StringComparison.Ordinal) == 0;
         }
 
         private static string GetNetFrameworkProductName()
         {
             var productAttribute = typeof(object).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyProductAttribute>();
-            return productAttribute != null ? productAttribute.Product : null;
+            return productAttribute?.Product;
         }
 
         private static string GetUnityProductName()
         {
             var productAttribute = typeof(AllClasses).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyProductAttribute>();
-            return productAttribute != null ? productAttribute.Product : null;
+            return productAttribute?.Product;
         }
     }
 }

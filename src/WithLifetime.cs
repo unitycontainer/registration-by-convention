@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
-using Unity;
 using Unity.Lifetime;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Provides helper methods to specify the lifetime for a type with registration by convention.

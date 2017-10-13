@@ -2,11 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using Unity;
 using Unity.Lifetime;
 using Unity.Registration;
 
-namespace Microsoft.Practices.Unity
+namespace Unity.RegistrationByConvention
 {
     /// <summary>
     /// Represents a set of types to register and their registration settings.
