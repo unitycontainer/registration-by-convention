@@ -15,31 +15,16 @@
     <PackageReleaseNotes>This package is distributed as .NET Standard 1.0 package.</PackageReleaseNotes>
     <Authors>Microsoft.Practices.Unity</Authors>
     <Company>Microsoft.Practices.Unity</Company>
+    <Configurations>Debug;Release;Package</Configurations>
   </PropertyGroup>
   
- 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>Full</DebugType>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TargetFramework>net47</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
+   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>package.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DebugType>Full</DebugType>
-  </PropertyGroup>
-
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp1.0' ">
     <Reference Include="System.Windows" />
   </ItemGroup>
 
@@ -47,14 +32,6 @@
     <Compile Remove="AllClasses.Desktop.cs" />
     <Compile Remove="Exceptions\DuplicateTypeMappingException.Desktop.cs" />
     <Compile Remove="WithLifetime.Desktop.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PackageReference Include="Unity.Abstractions" Version="2.0.0-RC1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <ProjectReference Include="..\..\Abstractions\src\Unity.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,6 +47,32 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Package'">
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>Full</DebugType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+
+  <ItemGroup Condition="'$(Configuration)'!='Release'">
+    <ProjectReference Include="..\..\Abstractions\src\Unity.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageReference Include="Unity.Abstractions" Version="2.0.0-RC3" />
   </ItemGroup>
 
 </Project>
