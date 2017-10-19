@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity.RegistrationByConvention.Properties;
 
 namespace Unity.RegistrationByConvention
 {
@@ -97,7 +96,7 @@ namespace Unity.RegistrationByConvention
             var checkAssemblies = assemblies as Assembly[] ?? assemblies.ToArray();
             if (checkAssemblies.Any(assembly => assembly == null))
             {
-                throw new ArgumentException(Resources.ExceptionNullAssembly, nameof(assemblies));
+                throw new ArgumentException(Constants.ExceptionNullAssembly, nameof(assemblies));
             }
 
             return checkAssemblies;

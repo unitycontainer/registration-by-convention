@@ -2,7 +2,6 @@
 
 using System;
 using System.Globalization;
-using Unity.RegistrationByConvention.Properties;
 
 namespace Unity.RegistrationByConvention.Exceptions
 {
@@ -31,7 +30,7 @@ namespace Unity.RegistrationByConvention.Exceptions
 
         private static string CreateMessage(string name, Type mappedFromType, Type currentMappedToType, Type newMappedToType)
         {
-            return string.Format(CultureInfo.CurrentCulture, Resources.DuplicateTypeMappingException, name, mappedFromType, currentMappedToType, newMappedToType);
+            return string.Format(CultureInfo.CurrentCulture, Constants.DuplicateTypeMappingException, name, mappedFromType, currentMappedToType, newMappedToType);
         }
 
         partial void RegisterSerializationHandler();

@@ -14,7 +14,7 @@ namespace Unity.RegistrationByConvention
     /// Provides a set of convenience overloads to the
     /// <see cref="IUnityContainer"/> interface to support registration of multiple types.
     /// </summary>
-    public static class UnityContainerRegistrationByConventionExtensions
+    public static class RegistrationByConventionExtensions
     {
         private static readonly Type[] EmptyTypes = new Type[0];
 

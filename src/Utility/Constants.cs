@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Unity.RegistrationByConvention
+﻿namespace Unity.RegistrationByConvention
 {
     public static class Constants
     {
