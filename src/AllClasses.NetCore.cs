@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -30,38 +30,38 @@ namespace Unity.RegistrationByConvention
 
         private static async Task<IEnumerable<Assembly>> GetAssembliesApplicationAsync(bool includeUnityAssemblies, bool skipOnError)
         {
-            //var folder = System.Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var folder = System.Windows.ApplicationModel.Package.Current.InstalledLocation;
             var assemblies = new List<Assembly>();
 
-            //foreach (var file in await folder.GetFilesAsync().AsTask().ConfigureAwait(false))
-            //{
-            //    var fileType = Path.GetExtension(file.Name);
+            foreach (var file in await folder.GetFilesAsync().AsTask().ConfigureAwait(false))
+            {
+                var fileType = Path.GetExtension(file.Name);
 
-            //    if (fileType == ".dll" || fileType == ".exe")
-            //    {
-            //        var name = new AssemblyName() { Name = Path.GetFileNameWithoutExtension(file.Name) };
-            //        Assembly assembly;
+                if (fileType == ".dll" || fileType == ".exe")
+                {
+                    var name = new AssemblyName() { Name = Path.GetFileNameWithoutExtension(file.Name) };
+                    Assembly assembly;
 
-            //        try
-            //        {
-            //            assembly = Assembly.Load(name);
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            if (!(skipOnError && (e is FileNotFoundException || e is BadImageFormatException)))
-            //            {
-            //                throw;
-            //            }
+                    try
+                    {
+                        assembly = Assembly.Load(name);
+                    }
+                    catch (Exception e)
+                    {
+                        if (!(skipOnError && (e is FileNotFoundException || e is BadImageFormatException)))
+                        {
+                            throw;
+                        }
 
-            //            continue;
-            //        }
+                        continue;
+                    }
 
-            //        if (includeUnityAssemblies || !IsUnityAssembly(assembly))
-            //        {
-            //            assemblies.Add(assembly);
-            //        }
-            //    }
-            //}
+                    if (includeUnityAssemblies || !IsUnityAssembly(assembly))
+                    {
+                        assemblies.Add(assembly);
+                    }
+                }
+            }
 
             return assemblies;
         }
