@@ -15,7 +15,6 @@
     <PackageReleaseNotes>This package is distributed as .NET Standard 1.0 package.</PackageReleaseNotes>
     <Authors>Microsoft.Practices.Unity</Authors>
     <Company>Microsoft.Practices.Unity</Company>
-    <Configurations>Debug;Release;Package</Configurations>
   </PropertyGroup>
   
    <PropertyGroup>
@@ -39,19 +38,14 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Package'">
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TargetFrameworks>netcoreapp1.0;net47;net45</TargetFrameworks>
+    <TargetFrameworks>net47;net45</TargetFrameworks>
     <OutputPath>$(SolutionDir)\lib\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>Full</DebugType>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
   </PropertyGroup>
   
 
