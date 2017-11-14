@@ -77,11 +77,20 @@ namespace Unity.RegistrationByConvention
                 var lifetimeManager = getLifetimeManager(type);
                 var injectionMembers = getInjectionMembers(type).ToArray();
 
-                RegisterTypeMappings(container, overwriteExistingMappings, type, name, fromTypes, mappings);
-
-                if (lifetimeManager != null || injectionMembers.Length > 0)
+                foreach (var fromType in fromTypes.Where(t => t != typeof(IDisposable)))
                 {
-                    container.RegisterType(null, type, name, lifetimeManager, injectionMembers);
+                    if (!overwriteExistingMappings)
+                    {
+                        var key = new NamedTypeBuildKey(fromType, name);
+                        if (mappings.TryGetValue(key, out var currentMappedToType) && (type != currentMappedToType))
+                        {
+                            throw new DuplicateTypeMappingException(name, fromType, currentMappedToType, type);
+                        }
+
+                        mappings[key] = type;
+                    }
+
+                    container.RegisterType(fromType, type, name, lifetimeManager, injectionMembers);
                 }
             }
 

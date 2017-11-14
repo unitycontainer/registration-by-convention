@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,11 +11,12 @@ using Unity.Injection;
 using Unity.Lifetime;
 using Unity.Registration;
 using Unity.RegistrationByConvention;
+using Unity.RegistrationByConvention.Exceptions;
 
 namespace Microsoft.Practices.Unity.Tests
 {
     [TestClass]
-    public partial class RegistrationByConventionFixture
+    public class RegistrationByConventionFixture
     {
         [TestMethod]
         public void DoesNotRegisterTypeWithNoLifetimeOrInjectionMembers()
@@ -51,7 +53,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.AreSame(typeof(MockLogger), registrations[0].RegisteredType);
             Assert.AreSame(typeof(MockLogger), registrations[0].MappedToType);
             Assert.AreEqual("name", registrations[0].Name);
-            Assert.IsNull(registrations[0].LifetimeManager);
+            Assert.IsInstanceOfType(registrations[0].LifetimeManager, typeof(TransientLifetimeManager));
         }
 
         [TestMethod]
@@ -66,7 +68,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.AreSame(typeof(ILogger), registrations[0].RegisteredType);
             Assert.AreSame(typeof(MockLogger), registrations[0].MappedToType);
             Assert.AreEqual("name", registrations[0].Name);
-            Assert.IsNull(registrations[0].LifetimeManager);
+            Assert.IsInstanceOfType(registrations[0].LifetimeManager, typeof(TransientLifetimeManager));
         }
 
         [TestMethod]
@@ -121,7 +123,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersUsingTheHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled);
+            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(2, registrations.Length);
@@ -144,7 +146,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersAllTypesWithHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(2, registrations.Length);
@@ -166,7 +168,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveTypeRegisteredWithAllInterfaces()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled);
+            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
 
             var logger1 = container.Resolve<ILogger>();
             var logger2 = container.Resolve<ILogger>();
@@ -178,7 +180,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveGenericTypeMappedWithMatchingInterface()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(global::Unity.RegistrationByConvention.AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly), WithMappings.FromMatchingInterface, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.None);
+            container.RegisterTypes(AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly), WithMappings.FromMatchingInterface, WithName.Default, WithLifetime.None);
 
             var list = container.Resolve<IList<int>>();
 
@@ -202,7 +204,7 @@ namespace Microsoft.Practices.Unity.Tests
             var container = new UnityContainer();
             container.RegisterType<object, string>();
 
-            AssertExtensions.AssertException<global::Unity.RegistrationByConvention.Exceptions.DuplicateTypeMappingException>(
+            AssertExtensions.AssertException<DuplicateTypeMappingException>(
                 () => container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }));
         }
 
@@ -211,7 +213,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
             var container = new UnityContainer();
 
-            AssertExtensions.AssertException<global::Unity.RegistrationByConvention.Exceptions.DuplicateTypeMappingException>(
+            AssertExtensions.AssertException<DuplicateTypeMappingException>(
                 () => container.RegisterTypes(new[] { typeof(string), typeof(int) }, t => new[] { typeof(object) }));
         }
 
@@ -228,7 +230,7 @@ namespace Microsoft.Practices.Unity.Tests
         }
 
         [TestMethod]
-        public void CanOverrideExistingMappingWithMappingForDifferentName()
+        public void CanNotOverrideExistingMappingWithMappingForDifferentName()
         {
             var container = new UnityContainer();
             container.RegisterType<object, string>("string");
@@ -237,8 +239,8 @@ namespace Microsoft.Practices.Unity.Tests
 
             container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }, t => "int");
 
-            Assert.AreEqual("a string", container.Resolve<object>("string"));
-            Assert.AreEqual(42, container.Resolve<object>("int"));
+            Assert.AreNotEqual("a string", container.Resolve<object>("string"));
+            Assert.AreNotEqual(42, container.Resolve<object>("int"));
         }
 
         [TestMethod]
@@ -268,28 +270,28 @@ namespace Microsoft.Practices.Unity.Tests
 
         public class TestConventionWithAllInterfaces : RegistrationConvention
         {
-            public override System.Collections.Generic.IEnumerable<System.Type> GetTypes()
+            public override IEnumerable<Type> GetTypes()
             {
                 yield return typeof(MockLogger);
                 yield return typeof(SpecialLogger);
             }
 
-            public override System.Func<System.Type, System.Collections.Generic.IEnumerable<System.Type>> GetFromTypes()
+            public override Func<Type, IEnumerable<Type>> GetFromTypes()
             {
                 return t => t.GetTypeInfo().ImplementedInterfaces;
             }
 
-            public override System.Func<System.Type, string> GetName()
+            public override Func<Type, string> GetName()
             {
                 return t => t.Name;
             }
 
-            public override System.Func<System.Type, LifetimeManager> GetLifetimeManager()
+            public override Func<Type, LifetimeManager> GetLifetimeManager()
             {
                 return t => new ContainerControlledLifetimeManager();
             }
 
-            public override System.Func<System.Type, System.Collections.Generic.IEnumerable<InjectionMember>> GetInjectionMembers()
+            public override Func<Type, IEnumerable<InjectionMember>> GetInjectionMembers()
             {
                 return null;
             }
