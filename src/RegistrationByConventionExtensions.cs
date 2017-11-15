@@ -72,25 +72,33 @@ namespace Unity.RegistrationByConvention
 
             foreach (var type in types ?? throw new ArgumentNullException(nameof(types)))
             {
-                var fromTypes = getFromTypes(type);
+                var fromTypes = getFromTypes(type)?.ToArray() ?? new Type[0];
                 var name = getName(type);
-                var lifetimeManager = getLifetimeManager(type);
-                var injectionMembers = getInjectionMembers(type).ToArray();
+                var injectionMembers = getInjectionMembers(type)?.ToArray();
 
-                foreach (var fromType in fromTypes.Where(t => t != typeof(IDisposable)))
+                if (0 < fromTypes.Length)
                 {
-                    if (!overwriteExistingMappings)
+                    foreach (var fromType in fromTypes.Where(t => t != typeof(IDisposable)))
                     {
-                        var key = new NamedTypeBuildKey(fromType, name);
-                        if (mappings.TryGetValue(key, out var currentMappedToType) && (type != currentMappedToType))
+                        if (!overwriteExistingMappings)
                         {
-                            throw new DuplicateTypeMappingException(name, fromType, currentMappedToType, type);
+                            var key = new NamedTypeBuildKey(fromType, name);
+                            if (mappings.TryGetValue(key, out var currentMappedToType) && (type != currentMappedToType))
+                            {
+                                throw new DuplicateTypeMappingException(name, fromType, currentMappedToType, type);
+                            }
+
+                            mappings[key] = type;
                         }
 
-                        mappings[key] = type;
+                        container.RegisterType(fromType, type, name, getLifetimeManager(type), injectionMembers);
                     }
-
-                    container.RegisterType(fromType, type, name, lifetimeManager, injectionMembers);
+                }
+                else
+                {
+                    var lifetimeManager = getLifetimeManager(type);
+                    if (null != lifetimeManager || (null != injectionMembers && 0 < injectionMembers.Length))
+                        container.RegisterType(null, type, name, lifetimeManager, injectionMembers);
                 }
             }
 

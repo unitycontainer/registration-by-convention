@@ -79,20 +79,14 @@ namespace Microsoft.Practices.Unity.Tests
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
-            Assert.AreEqual(2, registrations.Length);
+            Assert.AreEqual(1, registrations.Length);
 
             var mappingRegistration = registrations.Single(r => r.RegisteredType == typeof(ILogger));
-            var implementationRegistration = registrations.Single(r => r.RegisteredType == typeof(MockLogger));
 
             Assert.AreSame(typeof(ILogger), mappingRegistration.RegisteredType);
             Assert.AreSame(typeof(MockLogger), mappingRegistration.MappedToType);
             Assert.AreEqual("name", mappingRegistration.Name);
             Assert.IsInstanceOfType(mappingRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
-
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.RegisteredType);
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.MappedToType);
-            Assert.AreEqual("name", implementationRegistration.Name);
-            Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
 
         [TestMethod]
@@ -103,20 +97,14 @@ namespace Microsoft.Practices.Unity.Tests
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
-            Assert.AreEqual(2, registrations.Length);
+            Assert.AreEqual(1, registrations.Length);
 
             var mappingRegistration = registrations.Single(r => r.RegisteredType == typeof(ILogger));
-            var implementationRegistration = registrations.Single(r => r.RegisteredType == typeof(MockLogger));
 
             Assert.AreSame(typeof(ILogger), mappingRegistration.RegisteredType);
             Assert.AreSame(typeof(MockLogger), mappingRegistration.MappedToType);
             Assert.AreEqual("name", mappingRegistration.Name);
             Assert.IsInstanceOfType(mappingRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
-
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.RegisteredType);
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.MappedToType);
-            Assert.AreEqual("name", implementationRegistration.Name);
-            Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
 
         [TestMethod]
@@ -126,20 +114,14 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
-            Assert.AreEqual(2, registrations.Length);
+            Assert.AreEqual(1, registrations.Length);
 
             var mappingRegistration = registrations.Single(r => r.RegisteredType == typeof(ILogger));
-            var implementationRegistration = registrations.Single(r => r.RegisteredType == typeof(MockLogger));
 
             Assert.AreSame(typeof(ILogger), mappingRegistration.RegisteredType);
             Assert.AreSame(typeof(MockLogger), mappingRegistration.MappedToType);
             Assert.AreEqual(null, mappingRegistration.Name);
             Assert.IsInstanceOfType(mappingRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
-
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.RegisteredType);
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.MappedToType);
-            Assert.AreEqual(null, implementationRegistration.Name);
-            Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
 
         [TestMethod]
@@ -149,20 +131,14 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
-            Assert.AreEqual(2, registrations.Length);
+            Assert.AreEqual(1, registrations.Length);
 
             var mappingRegistration = registrations.Single(r => r.RegisteredType == typeof(ILogger));
-            var implementationRegistration = registrations.Single(r => r.RegisteredType == typeof(MockLogger));
 
             Assert.AreSame(typeof(ILogger), mappingRegistration.RegisteredType);
             Assert.AreSame(typeof(MockLogger), mappingRegistration.MappedToType);
             Assert.AreEqual("MockLogger", mappingRegistration.Name);
             Assert.IsInstanceOfType(mappingRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
-
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.RegisteredType);
-            Assert.AreSame(typeof(MockLogger), implementationRegistration.MappedToType);
-            Assert.AreEqual("MockLogger", implementationRegistration.Name);
-            Assert.IsInstanceOfType(implementationRegistration.LifetimeManager, typeof(ContainerControlledLifetimeManager));
         }
 
         public void CanResolveTypeRegisteredWithAllInterfaces()
@@ -195,7 +171,7 @@ namespace Microsoft.Practices.Unity.Tests
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger) || r.MappedToType == typeof(SpecialLogger)).ToArray();
 
-            Assert.AreEqual(4, registrations.Length);
+            Assert.AreEqual(2, registrations.Length);
         }
 
         [TestMethod]
@@ -235,12 +211,12 @@ namespace Microsoft.Practices.Unity.Tests
             var container = new UnityContainer();
             container.RegisterType<object, string>("string");
             container.RegisterInstance("string", "a string");
-            container.RegisterInstance("int", 42);
+            container.RegisterInstance<int>("int", 42);
 
             container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }, t => "int");
 
-            Assert.AreNotEqual("a string", container.Resolve<object>("string"));
-            Assert.AreNotEqual(42, container.Resolve<object>("int"));
+            Assert.AreEqual("a string", container.Resolve<object>("string"));
+            Assert.AreEqual(42, container.Resolve<object>("int"));
         }
 
         [TestMethod]
