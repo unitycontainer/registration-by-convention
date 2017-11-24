@@ -92,17 +92,17 @@ namespace Microsoft.Practices.Unity.Tests
 
         public class CustomLifetimeManager : LifetimeManager
         {
-            public override object GetValue()
+            public override object GetValue(ILifetimeContainer container = null)
             {
                 throw new NotImplementedException();
             }
 
-            public override void SetValue(object newValue)
+            public override void SetValue(object newValue, ILifetimeContainer container = null)
             {
                 throw new NotImplementedException();
             }
 
-            public override void RemoveValue()
+            public override void RemoveValue(ILifetimeContainer container = null)
             {
                 throw new NotImplementedException();
             }
