@@ -106,6 +106,11 @@ namespace Microsoft.Practices.Unity.Tests
             {
                 throw new NotImplementedException();
             }
+
+            protected override LifetimeManager OnCreateLifetimeManager()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public class TypeWithoutInterfaces { }
