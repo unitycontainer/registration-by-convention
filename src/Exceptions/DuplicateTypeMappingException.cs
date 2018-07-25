@@ -2,13 +2,15 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace Unity.RegistrationByConvention.Exceptions
 {
     /// <summary>
     /// The exception that is thrown when registering multiple types would result in an type mapping being overwritten.
     /// </summary>
-    public partial class DuplicateTypeMappingException : Exception
+    [Serializable]
+    public class DuplicateTypeMappingException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DuplicateTypeMappingException"/> class.
@@ -25,34 +27,49 @@ namespace Unity.RegistrationByConvention.Exceptions
             CurrentMappedToType = (currentMappedToType ?? throw new ArgumentNullException(nameof(currentMappedToType))).AssemblyQualifiedName;
             NewMappedToType = (newMappedToType ?? throw new ArgumentNullException(nameof(newMappedToType))).AssemblyQualifiedName;
 
-            RegisterSerializationHandler();
+        }
+
+        protected DuplicateTypeMappingException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            Name = info.GetString("DuplicateTypeMapping_Name");
+            MappedFromType = info.GetString("DuplicateTypeMapping_MappedFromType");
+            CurrentMappedToType = info.GetString("DuplicateTypeMapping_CurrentMappedToType");
+            NewMappedToType = info.GetString("DuplicateTypeMapping_NewMappedToTypee");
+        }
+
+        /// <summary>
+        /// Gets the name for the mapping.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the source type for the mapping.
+        /// </summary>
+        public string MappedFromType { get; }
+
+        /// <summary>
+        /// Gets the type currently mapped.
+        /// </summary>
+        public string CurrentMappedToType { get; }
+
+        /// <summary>
+        /// Gets the new type to map.
+        /// </summary>
+        public string NewMappedToType { get; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("DuplicateTypeMapping_Name", Name, typeof(string));
+            info.AddValue("DuplicateTypeMapping_MappedFromType", MappedFromType, typeof(string));
+            info.AddValue("DuplicateTypeMapping_CurrentMappedToType", CurrentMappedToType, typeof(string));
+            info.AddValue("DuplicateTypeMapping_NewMappedToTypee", NewMappedToType, typeof(string));
         }
 
         private static string CreateMessage(string name, Type mappedFromType, Type currentMappedToType, Type newMappedToType)
         {
             return string.Format(CultureInfo.CurrentCulture, Constants.DuplicateTypeMappingException, name, mappedFromType, currentMappedToType, newMappedToType);
         }
-
-        partial void RegisterSerializationHandler();
-
-        /// <summary>
-        /// Gets the name for the mapping.
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets the source type for the mapping.
-        /// </summary>
-        public string MappedFromType { get; private set; }
-
-        /// <summary>
-        /// Gets the type currently mapped.
-        /// </summary>
-        public string CurrentMappedToType { get; private set; }
-
-        /// <summary>
-        /// Gets the new type to map.
-        /// </summary>
-        public string NewMappedToType { get; private set; }
     }
 }
