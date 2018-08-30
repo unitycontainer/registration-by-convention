@@ -22,7 +22,7 @@ namespace Microsoft.Practices.Unity.Tests
         public void DoesNotRegisterTypeWithNoLifetimeOrInjectionMembers()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name");
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name");
 
             Assert.IsFalse(container.Registrations.Any(r => r.MappedToType == typeof(MockLogger)));
         }
@@ -31,7 +31,8 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersTypeWithLifetime()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name", getLifetimeManager: t => new ContainerControlledLifetimeManager());
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
+                getLifetimeManager: t => new ContainerControlledLifetimeManager());
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -45,7 +46,8 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersTypeWithInjectionMembers()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name", getInjectionMembers: t => new InjectionMember[] { new InjectionConstructor() });
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
+                getInjectionMembers: t => new InjectionMember[] {new InjectionConstructor()});
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -60,7 +62,8 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersMappingOnlyWithNoLifetimeOrInjectionMembers()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name", getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces);
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
+                getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces);
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -75,7 +78,9 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersMappingAndImplementationTypeWithLifetimeAndMixedInjectionMembers()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name", getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces, getLifetimeManager: t => new ContainerControlledLifetimeManager());
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
+                getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces,
+                getLifetimeManager: t => new ContainerControlledLifetimeManager());
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -93,7 +98,9 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersMappingAndImplementationTypeWithLifetime()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(new[] { typeof(MockLogger) }, getName: t => "name", getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces, getLifetimeManager: t => new ContainerControlledLifetimeManager());
+            container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
+                getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces,
+                getLifetimeManager: t => new ContainerControlledLifetimeManager());
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -111,7 +118,15 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersUsingTheHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
+            container.RegisterTypes(
+                AllClasses
+                    .FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly)
+                    .Where(t => t == typeof(MockLogger)),
+                WithMappings.FromAllInterfaces,
+                WithName.Default,
+                WithLifetime.ContainerControlled
+            );
+
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(1, registrations.Length);
@@ -128,7 +143,8 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersAllTypesWithHelperMethods()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces, WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces,
+                WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(1, registrations.Length);
@@ -144,7 +160,10 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveTypeRegisteredWithAllInterfaces()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly).Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default, WithLifetime.ContainerControlled);
+            container.RegisterTypes(
+                AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly)
+                    .Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default,
+                WithLifetime.ContainerControlled);
 
             var logger1 = container.Resolve<ILogger>();
             var logger2 = container.Resolve<ILogger>();
@@ -156,7 +175,8 @@ namespace Microsoft.Practices.Unity.Tests
         public void CanResolveGenericTypeMappedWithMatchingInterface()
         {
             var container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly), WithMappings.FromMatchingInterface, WithName.Default, WithLifetime.None);
+            container.RegisterTypes(AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly),
+                WithMappings.FromMatchingInterface, WithName.Default, WithLifetime.None);
 
             var list = container.Resolve<IList<int>>();
 
@@ -169,7 +189,8 @@ namespace Microsoft.Practices.Unity.Tests
             var container = new UnityContainer();
             container.RegisterTypes(new TestConventionWithAllInterfaces());
 
-            var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger) || r.MappedToType == typeof(SpecialLogger)).ToArray();
+            var registrations = container.Registrations
+                .Where(r => r.MappedToType == typeof(MockLogger) || r.MappedToType == typeof(SpecialLogger)).ToArray();
 
             Assert.AreEqual(2, registrations.Length);
         }
@@ -181,7 +202,7 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterType<object, string>();
 
             AssertExtensions.AssertException<DuplicateTypeMappingException>(
-                () => container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }));
+                () => container.RegisterTypes(new[] {typeof(int)}, t => new[] {typeof(object)}));
         }
 
         [TestMethod]
@@ -190,7 +211,7 @@ namespace Microsoft.Practices.Unity.Tests
             var container = new UnityContainer();
 
             AssertExtensions.AssertException<DuplicateTypeMappingException>(
-                () => container.RegisterTypes(new[] { typeof(string), typeof(int) }, t => new[] { typeof(object) }));
+                () => container.RegisterTypes(new[] {typeof(string), typeof(int)}, t => new[] {typeof(object)}));
         }
 
         [TestMethod]
@@ -200,7 +221,7 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterInstance("a string");
             container.RegisterType<object, string>();
 
-            container.RegisterTypes(new[] { typeof(string) }, t => new[] { typeof(object) });
+            container.RegisterTypes(new[] {typeof(string)}, t => new[] {typeof(object)});
 
             Assert.AreEqual("a string", container.Resolve<object>());
         }
@@ -213,7 +234,7 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterInstance("string", "a string");
             container.RegisterInstance<int>("int", 42);
 
-            container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }, t => "int");
+            container.RegisterTypes(new[] {typeof(int)}, t => new[] {typeof(object)}, t => "int");
 
             Assert.AreEqual("a string", container.Resolve<object>("string"));
             Assert.AreEqual(42, container.Resolve<object>("int"));
@@ -227,7 +248,7 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterInstance("a string");
             container.RegisterInstance(42);
 
-            container.RegisterTypes(new[] { typeof(int) }, t => new[] { typeof(object) }, overwriteExistingMappings: true);
+            container.RegisterTypes(new[] {typeof(int)}, t => new[] {typeof(object)}, overwriteExistingMappings: true);
 
             Assert.AreEqual(42, container.Resolve<object>());
         }
@@ -239,7 +260,8 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterInstance("a string");
             container.RegisterInstance(42);
 
-            container.RegisterTypes(new[] { typeof(string), typeof(int) }, t => new[] { typeof(object) }, overwriteExistingMappings: true);
+            container.RegisterTypes(new[] {typeof(string), typeof(int)}, t => new[] {typeof(object)},
+                overwriteExistingMappings: true);
 
             Assert.AreEqual(42, container.Resolve<object>());
         }
