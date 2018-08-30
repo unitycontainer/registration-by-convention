@@ -17,13 +17,13 @@ namespace Microsoft.Practices.Unity.Tests
         {
             var ex = new DuplicateTypeMappingException("SampleName", typeof(string), typeof(int), typeof(object));
 
-            var fs = new FileStream("data.dat", FileMode.Create);
+            var ms = new MemoryStream();
             var formatter = new BinaryFormatter();
-            formatter.Serialize(fs, ex);
-            fs.Close();
-            
-            fs = new FileStream("data.dat", FileMode.Open);
-            var newEx = (DuplicateTypeMappingException) formatter.Deserialize(fs);
+            formatter.Serialize(ms, ex);
+
+            ms.Seek(0, SeekOrigin.Begin);
+            var newEx = (DuplicateTypeMappingException) formatter.Deserialize(ms);
+            ms.Dispose();
 
             Assert.AreEqual(newEx.MappedFromType, ex.MappedFromType);
             Assert.AreEqual(newEx.CurrentMappedToType, ex.CurrentMappedToType);
@@ -55,13 +55,13 @@ namespace Microsoft.Practices.Unity.Tests
                 new object[0]
             );
 
-            var fs = new FileStream("data.dat", FileMode.Create);
+            var ms = new MemoryStream();
             var formatter = new BinaryFormatter();
-            formatter.Serialize(fs, value);
-            fs.Close();
+            formatter.Serialize(ms, value);
 
-            fs = new FileStream("data.dat", FileMode.Open);
-            var newEx = (DuplicateTypeMappingException)formatter.Deserialize(fs);
+            ms.Seek(0, SeekOrigin.Begin);
+            var newEx = (DuplicateTypeMappingException)formatter.Deserialize(ms);
+            ms.Dispose();
 
             Assert.AreEqual(newEx.MappedFromType, value.MappedFromType);
             Assert.AreEqual(newEx.CurrentMappedToType, value.CurrentMappedToType);
