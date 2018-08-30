@@ -71,17 +71,6 @@ namespace Unity.RegistrationByConvention.Exceptions
             return string.Format(CultureInfo.CurrentCulture, Constants.DuplicateTypeMappingException, name, mappedFromType, currentMappedToType, newMappedToType);
         }
 
-
-        //[SecurityCritical]
-        //public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    base.GetObjectData(info, context);
-        //    info.AddValue("DuplicateTypeMapping_Name", Name, typeof(string));
-        //    info.AddValue("DuplicateTypeMapping_MappedFromType", MappedFromType, typeof(string));
-        //    info.AddValue("DuplicateTypeMapping_CurrentMappedToType", CurrentMappedToType, typeof(string));
-        //    info.AddValue("DuplicateTypeMapping_NewMappedToTypee", NewMappedToType, typeof(string));
-        //}
-
         public void HandleSerialization()
         {
 #if !NETCOREAPP
