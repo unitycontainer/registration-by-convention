@@ -1,9 +1,6 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Unity.Lifetime;
-using Unity.Registration;
+using Unity.Injection;
 
 namespace Unity.RegistrationByConvention
 {

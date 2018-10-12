@@ -1,11 +1,8 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Builder;
-using Unity.Lifetime;
-using Unity.Registration;
+using Unity.Injection;
 using Unity.RegistrationByConvention.Exceptions;
 
 namespace Unity.RegistrationByConvention
