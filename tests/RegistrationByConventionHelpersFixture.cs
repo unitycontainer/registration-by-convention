@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.Practices.Unity.TestSupport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Unity;
-using Unity.Lifetime;
 using Unity.RegistrationByConvention;
 
 namespace Microsoft.Practices.Unity.Tests
