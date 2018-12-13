@@ -31,9 +31,9 @@ namespace Unity.RegistrationByConvention
         public abstract Func<Type, LifetimeManager> GetLifetimeManager();
 
         /// <summary>
-        /// Gets a function to get the additional <see cref="InjectionMember"/> objects for the registration of each type. Defaults to no injection members.
+        /// Gets a function to get the additional <see cref="IInjectionMember"/> objects for the registration of each type. Defaults to no injection members.
         /// </summary>
         /// <returns></returns>
-        public abstract Func<Type, IEnumerable<InjectionMember>> GetInjectionMembers();
+        public abstract Func<Type, IEnumerable<IInjectionMember>> GetInjectionMembers();
     }
 }

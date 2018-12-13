@@ -23,7 +23,7 @@ namespace Unity.RegistrationByConvention
         /// <param name="getFromTypes">A function that gets the types that will be requested for each type to configure. It can be a method from the <see cref="WithMappings" /> class or a custom function. Defaults to no registration types, and registers only the supplied types.</param>
         /// <param name="getName">A function that gets the name to use for the registration of each type. It can be a method from the <see cref="WithName" /> or a custom function. Defaults to no name.</param>
         /// <param name="getLifetimeManager">A function that gets the <see cref="LifetimeManager" /> for the registration of each type. It can be a method from the <see cref="WithLifetime" /> class or a custom function. Defaults to no lifetime management.</param>
-        /// <param name="getInjectionMembers">A function that gets the additional <see cref="InjectionMember" /> objects for the registration of each type. Defaults to no injection members.</param>
+        /// <param name="getInjectionMembers">A function that gets the additional <see cref="IInjectionMember" /> objects for the registration of each type. Defaults to no injection members.</param>
         /// <param name="overwriteExistingMappings"><see langword="true"/> to overwrite existing mappings; otherwise, <see langword="false"/>. Defaults to <see langword="false"/>.</param>
         /// <returns>
         /// The container that this method was called on.
@@ -35,7 +35,7 @@ namespace Unity.RegistrationByConvention
             Func<Type, IEnumerable<Type>> getFromTypes = null,
             Func<Type, string> getName = null,
             Func<Type, LifetimeManager> getLifetimeManager = null,
-            Func<Type, IEnumerable<InjectionMember>> getInjectionMembers = null,
+            Func<Type, IEnumerable<IInjectionMember>> getInjectionMembers = null,
             bool overwriteExistingMappings = false)
         {
             var container = unityContainer ?? throw new ArgumentNullException(nameof(unityContainer));
@@ -57,7 +57,7 @@ namespace Unity.RegistrationByConvention
 
             if (getInjectionMembers == null)
             {
-                getInjectionMembers = t => Enumerable.Empty<InjectionMember>();
+                getInjectionMembers = t => Enumerable.Empty<IInjectionMember>();
             }
 
             // capture the existing mappings in a dictionary
