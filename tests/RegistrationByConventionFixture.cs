@@ -46,7 +46,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
             var container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
-                getInjectionMembers: t => new IInjectionMember[] {new InjectionConstructor()});
+                getInjectionMembers: t => new InjectionMember[] {new InjectionConstructor()});
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
@@ -288,7 +288,7 @@ namespace Microsoft.Practices.Unity.Tests
                 return t => new ContainerControlledLifetimeManager();
             }
 
-            public override Func<Type, IEnumerable<IInjectionMember>> GetInjectionMembers()
+            public override Func<Type, IEnumerable<InjectionMember>> GetInjectionMembers()
             {
                 return null;
             }
