@@ -20,7 +20,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void DoesNotRegisterTypeWithNoLifetimeOrInjectionMembers()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name");
 
             Assert.IsFalse(container.Registrations.Any(r => r.MappedToType == typeof(MockLogger)));
@@ -29,7 +29,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersTypeWithLifetime()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
                 getLifetimeManager: t => new ContainerControlledLifetimeManager());
 
@@ -44,7 +44,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersTypeWithInjectionMembers()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
                 getInjectionMembers: t => new InjectionMember[] {new InjectionConstructor()});
 
@@ -60,7 +60,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersMappingOnlyWithNoLifetimeOrInjectionMembers()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
                 getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces);
 
@@ -76,7 +76,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersMappingAndImplementationTypeWithLifetimeAndMixedInjectionMembers()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
                 getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces,
                 getLifetimeManager: t => new ContainerControlledLifetimeManager());
@@ -96,7 +96,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersMappingAndImplementationTypeWithLifetime()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new[] {typeof(MockLogger)}, getName: t => "name",
                 getFromTypes: t => t.GetTypeInfo().ImplementedInterfaces,
                 getLifetimeManager: t => new ContainerControlledLifetimeManager());
@@ -116,7 +116,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersUsingTheHelperMethods()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(
                 AllClasses
                     .FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly)
@@ -141,7 +141,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersAllTypesWithHelperMethods()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces,
                 WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
@@ -185,7 +185,7 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void RegistersTypeAccordingToConvention()
         {
-            var container = new UnityContainer();
+            IUnityContainer container = new UnityContainer();
             container.RegisterTypes(new TestConventionWithAllInterfaces());
 
             var registrations = container.Registrations
