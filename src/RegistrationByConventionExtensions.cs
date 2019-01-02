@@ -95,7 +95,7 @@ namespace Unity.RegistrationByConvention
                 {
                     var lifetimeManager = getLifetimeManager(type);
                     if (null != lifetimeManager || (null != injectionMembers && 0 < injectionMembers.Length))
-                        container.RegisterType(null, type, name, lifetimeManager, injectionMembers);
+                        container.RegisterType((Type)null, type, name, lifetimeManager, injectionMembers);
                 }
             }
 
