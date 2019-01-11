@@ -65,6 +65,15 @@ namespace Unity.RegistrationByConvention
 
                 return new Assembly[0];
             }
+            catch (VerificationException)
+            {
+                if (!skipOnError)
+                {
+                    throw;
+                }
+
+                return new Assembly[0];
+            }
 
             return GetAssemblyNames(basePath, skipOnError)
                     .Select(an => LoadAssembly(Path.GetFileNameWithoutExtension(an), skipOnError))
