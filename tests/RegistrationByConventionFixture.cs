@@ -1,14 +1,14 @@
 ﻿
 
+using Microsoft.Practices.Unity.TestSupport;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Practices.Unity.TestSupport;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Unity;
 using Unity.Injection;
-using Unity.Registration;
+using Unity.Lifetime;
 using Unity.RegistrationByConvention;
 using Unity.RegistrationByConvention.Exceptions;
 
@@ -123,7 +123,7 @@ namespace Microsoft.Practices.Unity.Tests
                     .Where(t => t == typeof(MockLogger)),
                 WithMappings.FromAllInterfaces,
                 WithName.Default,
-                WithLifetime.ContainerControlled
+                global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled
             );
 
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
@@ -143,7 +143,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
             IUnityContainer container = new UnityContainer();
             container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces,
-                WithName.TypeName, WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+                WithName.TypeName, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled, overwriteExistingMappings: true);
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(1, registrations.Length);
@@ -162,7 +162,7 @@ namespace Microsoft.Practices.Unity.Tests
             container.RegisterTypes(
                 AllClasses.FromAssemblies(typeof(MockLogger).GetTypeInfo().Assembly)
                     .Where(t => t == typeof(MockLogger)), WithMappings.FromAllInterfaces, WithName.Default,
-                WithLifetime.ContainerControlled);
+                global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled);
 
             var logger1 = container.Resolve<ILogger>();
             var logger2 = container.Resolve<ILogger>();
@@ -175,7 +175,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
             var container = new UnityContainer();
             container.RegisterTypes(AllClasses.FromAssemblies(typeof(IList<>).GetTypeInfo().Assembly),
-                WithMappings.FromMatchingInterface, WithName.Default, WithLifetime.None);
+                WithMappings.FromMatchingInterface, WithName.Default, global::Unity.RegistrationByConvention.WithLifetime.None);
 
             var list = container.Resolve<IList<int>>();
 

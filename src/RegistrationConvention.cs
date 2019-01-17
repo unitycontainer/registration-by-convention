@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.Injection;
+using Unity.Lifetime;
 
 namespace Unity.RegistrationByConvention
 {
