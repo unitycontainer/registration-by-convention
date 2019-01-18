@@ -89,14 +89,14 @@ namespace Unity.RegistrationByConvention
                             mappings[key] = type;
                         }
 
-                        container.RegisterType(fromType, type, name, getLifetimeManager(type), injectionMembers);
+                        container.RegisterType(fromType, type, name, (ITypeLifetimeManager)getLifetimeManager(type), injectionMembers);
                     }
                 }
                 else
                 {
                     var lifetimeManager = getLifetimeManager(type);
                     if (null != lifetimeManager || (null != injectionMembers && 0 < injectionMembers.Length))
-                        container.RegisterType((Type)null, type, name, lifetimeManager, injectionMembers);
+                        container.RegisterType((Type)null, type, name, (ITypeLifetimeManager)lifetimeManager, injectionMembers);
                 }
             }
 
