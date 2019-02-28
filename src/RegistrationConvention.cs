@@ -26,10 +26,10 @@ namespace Unity.RegistrationByConvention
         public abstract Func<Type, string> GetName();
 
         /// <summary>
-        /// Gets a function to get the <see cref="LifetimeManager"/> for the registration of each type. Defaults to no lifetime management.
+        /// Gets a function to get the <see cref="ITypeLifetimeManager"/> for the registration of each type. Defaults to no lifetime management.
         /// </summary>
         /// <returns></returns>
-        public abstract Func<Type, LifetimeManager> GetLifetimeManager();
+        public abstract Func<Type, ITypeLifetimeManager> GetLifetimeManager();
 
         /// <summary>
         /// Gets a function to get the additional <see cref="InjectionMember"/> objects for the registration of each type. Defaults to no injection members.
