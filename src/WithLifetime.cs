@@ -23,7 +23,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A container controlled lifetime manager.</returns>
-        public static LifetimeManager ContainerControlled(Type type)
+        public static ContainerControlledLifetimeManager ContainerControlled(Type type)
         {
             return new ContainerControlledLifetimeManager();
         }
@@ -33,7 +33,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>An externally controlled lifetime manager.</returns>
-        public static LifetimeManager ExternallyControlled(Type type)
+        public static ExternallyControlledLifetimeManager ExternallyControlled(Type type)
         {
             return new ExternallyControlledLifetimeManager();
         }
@@ -43,7 +43,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A hierarchical lifetime manager.</returns>
-        public static LifetimeManager Hierarchical(Type type)
+        public static HierarchicalLifetimeManager Hierarchical(Type type)
         {
             return new HierarchicalLifetimeManager();
         }
@@ -53,7 +53,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A per resolve lifetime manager.</returns>
-        public static LifetimeManager PerResolve(Type type)
+        public static PerResolveLifetimeManager PerResolve(Type type)
         {
             return new PerResolveLifetimeManager();
         }
@@ -63,7 +63,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A transient lifetime manager.</returns>
-        public static LifetimeManager Transient(Type type)
+        public static TransientLifetimeManager Transient(Type type)
         {
             return new TransientLifetimeManager();
         }

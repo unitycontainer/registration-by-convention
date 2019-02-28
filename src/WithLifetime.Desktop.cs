@@ -10,7 +10,7 @@ namespace Unity.RegistrationByConvention
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A per thread lifetime manager.</returns>
-        public static LifetimeManager PerThread(Type type)
+        public static PerThreadLifetimeManager PerThread(Type type)
         {
             return new PerThreadLifetimeManager();
         }
