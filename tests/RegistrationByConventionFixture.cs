@@ -283,7 +283,7 @@ namespace Microsoft.Practices.Unity.Tests
                 return t => t.Name;
             }
 
-            public override Func<Type, LifetimeManager> GetLifetimeManager()
+            public override Func<Type, ITypeLifetimeManager> GetLifetimeManager()
             {
                 return t => new ContainerControlledLifetimeManager();
             }
