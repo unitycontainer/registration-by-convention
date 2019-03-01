@@ -88,7 +88,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsInstanceOfType(global::Unity.RegistrationByConvention.WithLifetime.PerThread(typeof(MockLogger)), typeof(PerThreadLifetimeManager));
         }
 
-        public class CustomLifetimeManager : LifetimeManager
+        public class CustomLifetimeManager : LifetimeManager, ITypeLifetimeManager
         {
             public override object GetValue(ILifetimeContainer container = null)
             {

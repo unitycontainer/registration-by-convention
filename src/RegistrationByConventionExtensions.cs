@@ -23,7 +23,7 @@ namespace Unity.RegistrationByConvention
         /// <param name="types">The types to register. The methods in the <see cref="AllClasses" /> class can be used to scan assemblies to get types, and further filtering can be performed using LINQ queries.</param>
         /// <param name="getFromTypes">A function that gets the types that will be requested for each type to configure. It can be a method from the <see cref="WithMappings" /> class or a custom function. Defaults to no registration types, and registers only the supplied types.</param>
         /// <param name="getName">A function that gets the name to use for the registration of each type. It can be a method from the <see cref="WithName" /> or a custom function. Defaults to no name.</param>
-        /// <param name="getLifetimeManager">A function that gets the <see cref="LifetimeManager" /> for the registration of each type. It can be a method from the <see cref="WithLifetime" /> class or a custom function. Defaults to no lifetime management.</param>
+        /// <param name="getLifetimeManager">A function that gets the <see cref="ITypeLifetimeManager" /> for the registration of each type. It can be a method from the <see cref="WithLifetime" /> class or a custom function. Defaults to no lifetime management.</param>
         /// <param name="getInjectionMembers">A function that gets the additional <see cref="InjectionMember" /> objects for the registration of each type. Defaults to no injection members.</param>
         /// <param name="overwriteExistingMappings"><see langword="true"/> to overwrite existing mappings; otherwise, <see langword="false"/>. Defaults to <see langword="false"/>.</param>
         /// <returns>
@@ -35,7 +35,7 @@ namespace Unity.RegistrationByConvention
             IEnumerable<Type> types,
             Func<Type, IEnumerable<Type>> getFromTypes = null,
             Func<Type, string> getName = null,
-            Func<Type, LifetimeManager> getLifetimeManager = null,
+            Func<Type, ITypeLifetimeManager> getLifetimeManager = null,
             Func<Type, IEnumerable<InjectionMember>> getInjectionMembers = null,
             bool overwriteExistingMappings = false)
         {
@@ -89,14 +89,16 @@ namespace Unity.RegistrationByConvention
                             mappings[key] = type;
                         }
 
-                        container.RegisterType(fromType, type, name, (ITypeLifetimeManager)getLifetimeManager(type), injectionMembers);
+                        container.RegisterType(fromType, type, name, getLifetimeManager(type), injectionMembers);
                     }
                 }
                 else
                 {
                     var lifetimeManager = getLifetimeManager(type);
                     if (null != lifetimeManager || (null != injectionMembers && 0 < injectionMembers.Length))
-                        container.RegisterType((Type)null, type, name, (ITypeLifetimeManager)lifetimeManager, injectionMembers);
+                    {
+                        container.RegisterType((Type)null, type, name, lifetimeManager, injectionMembers);
+                    }
                 }
             }
 
@@ -120,26 +122,6 @@ namespace Unity.RegistrationByConvention
                                convention.GetInjectionMembers(), overwriteExistingMappings);
 
             return container;
-        }
-
-        private static void RegisterTypeMappings(IUnityContainer container, bool overwriteExistingMappings, Type type, string name, IEnumerable<Type> fromTypes, Dictionary<NamedTypeBuildKey, Type> mappings)
-        {
-            foreach (var fromType in fromTypes.Where(t => t != typeof(IDisposable)))
-            {
-                if (!overwriteExistingMappings)
-                {
-                    var key = new NamedTypeBuildKey(fromType, name);
-                    Type currentMappedToType;
-                    if (mappings.TryGetValue(key, out currentMappedToType) && (type != currentMappedToType))
-                    {
-                        throw new DuplicateTypeMappingException(name, fromType, currentMappedToType, type);
-                    }
-
-                    mappings[key] = type;
-                }
-
-                container.RegisterType(fromType, type, name, null);
-            }
         }
     }
 }

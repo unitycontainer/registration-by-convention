@@ -9,17 +9,17 @@ namespace Unity.RegistrationByConvention
     public static partial class WithLifetime
     {
         /// <summary>
-        /// Returns a <see langword="null"/> <see cref="LifetimeManager"/>.
+        /// Returns a <see langword="null"/> <see cref="ITypeLifetimeManager"/>.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A lifetime manager</returns>
-        public static LifetimeManager None(Type type)
+        public static ITypeLifetimeManager None(Type type)
         {
             return null;
         }
 
         /// <summary>
-        /// Returns a <see cref="ContainerControlledLifetimeManager"/>.
+        /// Returns a <see cref="ContainerControlledITypeLifetimeManager"/>.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A container controlled lifetime manager.</returns>
@@ -69,15 +69,15 @@ namespace Unity.RegistrationByConvention
         }
 
         /// <summary>
-        /// Returns a <see cref="LifetimeManager" />.
+        /// Returns a <see cref="ITypeLifetimeManager" />.
         /// </summary>
-        /// <typeparam name="T">The custom <see cref="LifetimeManager"/> type.</typeparam>
+        /// <typeparam name="T">The custom <see cref="ITypeLifetimeManager"/> type.</typeparam>
         /// <param name="type">The type.</param>
         /// <returns>
         /// A lifetime manager.
         /// </returns>
-        public static LifetimeManager Custom<T>(Type type)
-            where T : LifetimeManager, new()
+        public static ITypeLifetimeManager Custom<T>(Type type)
+            where T : ITypeLifetimeManager, new()
         {
             return new T();
         }
