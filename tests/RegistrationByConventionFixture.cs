@@ -142,8 +142,12 @@ namespace Microsoft.Practices.Unity.Tests
         public void RegistersAllTypesWithHelperMethods()
         {
             IUnityContainer container = new UnityContainer();
-            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), WithMappings.FromAllInterfaces,
-                WithName.TypeName, global::Unity.RegistrationByConvention.WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+
+            container.RegisterTypes(AllClasses.FromLoadedAssemblies(), 
+                                  WithMappings.FromAllInterfaces,
+                                      WithName.TypeName, 
+                                  WithLifetime.ContainerControlled, overwriteExistingMappings: true);
+
             var registrations = container.Registrations.Where(r => r.MappedToType == typeof(MockLogger)).ToArray();
 
             Assert.AreEqual(1, registrations.Length);
